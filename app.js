@@ -87,51 +87,64 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  // Shared Web Audio Context to prevent hitting browser limits
+  let audioCtx = null;
+  function getAudioContext() {
+    if (!audioCtx) {
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    if (audioCtx.state === 'suspended') {
+      audioCtx.resume();
+    }
+    return audioCtx;
+  }
+
   // Slap sound synthesis (Web Audio API)
   function playSlapSound() {
     try {
-      const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      const ctx = getAudioContext();
       
       // Short white noise burst for slap splash
-      const bufferSize = audioCtx.sampleRate * 0.08; // 80ms
-      const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+      const bufferSize = ctx.sampleRate * 0.08; // 80ms
+      const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
       const data = buffer.getChannelData(0);
       for (let i = 0; i < bufferSize; i++) {
         data[i] = Math.random() * 2 - 1;
       }
       
-      const noise = audioCtx.createBufferSource();
+      const noise = ctx.createBufferSource();
       noise.buffer = buffer;
       
-      const filter = audioCtx.createBiquadFilter();
+      const filter = ctx.createBiquadFilter();
       filter.type = 'bandpass';
-      filter.frequency.setValueAtTime(1000, audioCtx.currentTime);
+      filter.frequency.setValueAtTime(1000, ctx.currentTime);
       
-      const gainNode = audioCtx.createGain();
-      gainNode.gain.setValueAtTime(0.25, audioCtx.currentTime);
-      gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.08);
+      const gainNode = ctx.createGain();
+      gainNode.gain.setValueAtTime(0.25, ctx.currentTime);
+      gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.08);
       
       noise.connect(filter);
       filter.connect(gainNode);
-      gainNode.connect(audioCtx.destination);
+      gainNode.connect(ctx.destination);
       
       noise.start();
       
       // Decaying triangle wave for physical impact punch
-      const osc = audioCtx.createOscillator();
-      const oscGain = audioCtx.createGain();
+      const osc = ctx.createOscillator();
+      const oscGain = ctx.createGain();
       osc.type = 'triangle';
-      osc.frequency.setValueAtTime(180, audioCtx.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(45, audioCtx.currentTime + 0.08);
+      osc.frequency.setValueAtTime(180, ctx.currentTime);
+      osc.frequency.exponentialRampToTimeValue = 45; // pitch decay
+      osc.frequency.exponentialRampToValueAtTime(45, ctx.currentTime + 0.08);
       
-      oscGain.gain.setValueAtTime(0.3, audioCtx.currentTime);
-      oscGain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.08);
+      oscGain.gain.setValueAtTime(0.3, ctx.currentTime);
+      oscGain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.08);
       
       osc.connect(oscGain);
-      oscGain.connect(audioCtx.destination);
+      oscGain.connect(ctx.destination);
       
       osc.start();
-      osc.stop(audioCtx.currentTime + 0.08);
+      osc.stop(ctx.currentTime + 0.08);
     } catch (e) {
       console.log("Web Audio not allowed until interaction", e);
     }
@@ -140,12 +153,12 @@ document.addEventListener('DOMContentLoaded', () => {
   // Success arpeggio synthesizer
   function playUnlockSound() {
     try {
-      const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      const now = audioCtx.currentTime;
+      const ctx = getAudioContext();
+      const now = ctx.currentTime;
       const notes = [261.63, 329.63, 392.00, 523.25]; // C major arpeggio
       notes.forEach((freq, idx) => {
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
         
         osc.type = 'sine';
         osc.frequency.setValueAtTime(freq, now + idx * 0.1);
@@ -155,7 +168,7 @@ document.addEventListener('DOMContentLoaded', () => {
         gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.1 + 0.4);
         
         osc.connect(gain);
-        gain.connect(audioCtx.destination);
+        gain.connect(ctx.destination);
         
         osc.start(now + idx * 0.1);
         osc.stop(now + idx * 0.1 + 0.4);
@@ -180,7 +193,7 @@ document.addEventListener('DOMContentLoaded', () => {
       // Touchstart is used for immediate mobile feedback
       e.preventDefault();
       handleSlap(e);
-    });
+    }, { passive: false });
   }
 
   function handleSlap(e) {
@@ -320,7 +333,7 @@ document.addEventListener('DOMContentLoaded', () => {
   noBtn.addEventListener('touchstart', (e) => {
     e.preventDefault(); // Stop click emulation
     moveNoButton(e);
-  });
+  }, { passive: false });
 
   // Success Celebration: Canvas Confetti & Hearts
   yesBtn.addEventListener('click', () => {

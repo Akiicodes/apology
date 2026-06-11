@@ -134,7 +134,6 @@ document.addEventListener('DOMContentLoaded', () => {
       const oscGain = ctx.createGain();
       osc.type = 'triangle';
       osc.frequency.setValueAtTime(180, ctx.currentTime);
-      osc.frequency.exponentialRampToTimeValue = 45; // pitch decay
       osc.frequency.exponentialRampToValueAtTime(45, ctx.currentTime + 0.08);
       
       oscGain.gain.setValueAtTime(0.3, ctx.currentTime);

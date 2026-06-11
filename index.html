@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>I am Sorry 🥺</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- Animated Mesh Background Elements -->
+  <div class="background-glow">
+    <div class="glow-circle glow-1"></div>
+    <div class="glow-circle glow-2"></div>
+    <div class="glow-circle glow-3"></div>
+  </div>
+
+  <!-- Slap Game Screen Overlay -->
+  <div class="slap-screen" id="slap-screen">
+    <div class="slap-card">
+      <h1 class="slap-title">Punishment Time! 😤</h1>
+      <p class="slap-subtitle">Slap him to unlock further</p>
+      
+      <div class="slap-image-container">
+        <img src="slap_guy.png" alt="Slap Target">
+        <div class="slap-effect-layer" id="slap-effects"></div>
+      </div>
+      
+      <div class="slap-progress-bar">
+        <div class="slap-progress-fill" id="slap-progress"></div>
+      </div>
+      
+      <div class="slap-counter" id="slap-counter">Slaps: 0 / 10</div>
+    </div>
+  </div>
+
+  <!-- Main App Window -->
+  <div class="app-container" id="main-app" style="display: none;">
+    <main class="window" id="apology-window">
+      
+      <!-- Titlebar Header -->
+      <div class="window-titlebar">
+        <div class="window-dots">
+          <span class="dot dot-close" title="Close"></span>
+          <span class="dot dot-minimize" title="Minimize"></span>
+          <span class="dot dot-expand" title="Expand"></span>
+        </div>
+        <div class="window-title">For the person who actually cares</div>
+        <div></div> <!-- Spacer for symmetry -->
+      </div>
+
+      <!-- Navigation Tabs -->
+      <nav class="window-tabs" aria-label="Window navigation">
+        <button class="tab-btn active" data-tab="letter-tab">
+          <span>✉️</span> Letter
+        </button>
+        <button class="tab-btn" data-tab="game-tab">
+          <span>🎮</span> Make Up?
+        </button>
+        <button class="tab-btn" data-tab="memories-tab">
+          <span>📸</span> Memories
+        </button>
+        <button class="tab-btn" data-tab="hug-tab">
+          <span>🤗</span> Virtual Gift
+        </button>
+      </nav>
+
+      <!-- Viewport Content Area -->
+      <div class="window-content">
+        
+        <!-- Canvas for Yes Confetti -->
+        <canvas id="celebration-canvas"></canvas>
+        
+        <!-- Tab 1: The Sincere Letter -->
+        <section class="tab-pane active" id="letter-tab">
+          <div class="letter-box">
+            <div class="letter-text" id="typewriter-text"></div>
+          </div>
+        </section>
+
+        <!-- Tab 2: The Interactive Game -->
+        <section class="tab-pane" id="game-tab">
+          <!-- Game State 1: Evasion Game -->
+          <div class="game-container" id="evasion-game">
+            <h2 class="game-heading">Do you forgive me? 🥺</h2>
+            <p class="game-sub">Please select your honest answer...</p>
+            <div class="btn-group" id="game-btn-group">
+              <button class="action-btn btn-yes" id="yes-btn">Yes</button>
+              <button class="action-btn btn-no" id="no-btn">No</button>
+            </div>
+          </div>
+          
+          <!-- Game State 2: Forgiven Success Screen -->
+          <div class="success-card" id="success-screen">
+            <div class="success-icon">💖</div>
+            <h2 class="game-heading">Yay! Thank you! 🥰</h2>
+            <p class="game-sub">You are the absolute best! I promise to make it up to you. Hugs are on their way! 🌸✨</p>
+          </div>
+        </section>
+
+        <!-- Tab 3: Memories Gallery -->
+        <section class="tab-pane" id="memories-tab">
+          <div class="gallery-container">
+            <h2 class="game-heading">Our Memories</h2>
+            <p class="game-sub">A few of my absolute favorite moments with you on video calls. ✨</p>
+            
+            <div class="polaroid-gallery">
+              <div class="polaroid-card card-1">
+                <div class="polaroid-image-wrapper">
+                  <img src="photo1.png" alt="Memory 1" onerror="this.src='data:image/svg+xml;charset=utf-8,%3Csvg xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27 width%3D%27300%27 height%3D%27300%27 viewBox%3D%270 0 100 100%27%3E%3Crect width%3D%27100%25%27 height%3D%27100%25%27 fill%3D%27%2523ffe6ee%27%2F%3E%3Ctext x%3D%2750%25%27 y%3D%2750%25%27 dominant-baseline%3D%27middle%27 text-anchor%3D%27middle%27 font-size%3D%278%27 fill%3D%27%2523ff7597%27%3Ephoto1.png%3C%2Ftext%3E%3C%2Fsvg%3E'">
+                </div>
+                <p class="polaroid-caption">Sweetest pout of yours 🌸</p>
+              </div>
+              
+              <div class="polaroid-card card-2">
+                <div class="polaroid-image-wrapper">
+                  <img src="photo2.png" alt="Memory 2" onerror="this.src='data:image/svg+xml;charset=utf-8,%3Csvg xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27 width%3D%27300%27 height%3D%27300%27 viewBox%3D%270 0 100 100%27%3E%3Crect width%3D%27100%25%27 height%3D%27100%25%27 fill%3D%27%2523eef0ff%27%2F%3E%3Ctext x%3D%2750%25%27 y%3D%2750%25%27 dominant-baseline%3D%27middle%27 text-anchor%3D%27middle%27 font-size%3D%278%27 fill%3D%27%2523a38bfc%27%3Ephoto2.png%3C%2Ftext%3E%3C%2Fsvg%3E'">
+                </div>
+                <p class="polaroid-caption">Drama Queen as always! 😚</p>
+              </div>
+
+              <div class="polaroid-card card-3">
+                <div class="polaroid-image-wrapper">
+                  <img src="photo3.png" alt="Memory 3" onerror="this.src='data:image/svg+xml;charset=utf-8,%3Csvg xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27 width%3D%27300%27 height%3D%27300%27 viewBox%3D%270 0 100 100%27%3E%3Crect width%3D%27100%25%27 height%3D%27100%25%27 fill%3D%27%2523fff2ee%27%2F%3E%3Ctext x%3D%2750%25%27 y%3D%2750%25%27 dominant-baseline%3D%27middle%27 text-anchor%3D%27middle%27 font-size%3D%278%27 fill%3D%27%2523ffb59f%27%3Ephoto3.png%3C%2Ftext%3E%3C%2Fsvg%3E'">
+                </div>
+                <p class="polaroid-caption">Finally quiet! 🤫 (Muted)</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Tab 4: Virtual Hug Spawner -->
+        <section class="tab-pane" id="hug-tab">
+          <div class="hug-container">
+            <div class="hug-display">
+              <div class="hug-avatar" id="hug-avatar">🧸</div>
+              <!-- Floating elements overlay specific to hug area -->
+              <div class="floating-elements" id="hug-particles"></div>
+            </div>
+            <h2 class="game-heading">Send a Virtual Hug</h2>
+            <p class="game-sub">Tap the button to send floating warm hugs and hearts!</p>
+            <button class="action-btn hug-btn" id="send-hug-btn">Send Hug 🤗</button>
+          </div>
+        </section>
+
+      </div>
+    </main>
+
+    <!-- Footer Area -->
+    <footer class="footer">
+      <p>Made with ❤️ by your Sinhaaa</p>
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
